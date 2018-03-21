@@ -245,6 +245,7 @@ h2 {
 
 .item__delete {
     float: left;
+    transition: all .5s; 
 }
 
 .item__delete--btn {
@@ -258,11 +259,11 @@ h2 {
     display: none;
 }
 
-.item__delete--btn:focus { outline: none; }
-.item__delete--btn:active { transform: translateY(2px); }
+.item__delete--btn:focus { outline: none;}
+.item__delete--btn:active { transform: translateY(2px);}
 
-.item:hover .item__delete--btn { display: block; }
-.item:hover .item__value { transform: translateX(-20px); }
+.item:hover .item__delete--btn { display: block; opacity: 1;}
+.item:hover .item__value { transform: translateX(-20px); transition: .5s; }
 .item:hover .item__percentage { transform: translateX(-20px); }
 
 
