@@ -1,17 +1,40 @@
-//Immiediatly invoked function expressions(IIFE)
+//immediately invoked function expressions(IIFE) //added contructor and data structures
 /********************
  * BUDGET CONTROLLER
  ********************/
 var budgetController = (() => {
-    //some code
-})(); 
 
+    //function contructors
+    var Expense = function(id, description,value) {
+        this.id = id; 
+        this.description = description; 
+        this.value = value; 
+    }; 
+
+    var Income = function(id, description,value) {
+        this.id = id; 
+        this.description = description; 
+        this.value = value; 
+    }; 
+    
+    var data = {
+        allItems: {
+            exp: [], 
+            inc: []
+        },
+        totals: {
+            exp: 0, 
+            inc: 0
+        }
+    }
+
+})(); 
 
 /********************
  * UI CONTROLLER
  ********************/
 var UIContoller = (() => {
-    //private
+    //PRIVATE
 
     //DOM class/id strings  
     var DOMstrings = {
@@ -21,16 +44,17 @@ var UIContoller = (() => {
         inputBtn: '.add__btn'    
     }; 
     
-    //public
+    //PUBLIC
     return {
+
         getinput: () => {
             return {
             type: document.querySelector(DOMstrings.inputType).value, //will e either inc or exp
             description: document.querySelector(DOMstrings.inputDescription).value, //will be a string
             value: document.querySelector(DOMstrings.inputValue).value //will be a decimal number/int
-            };
-            
+            };    
         }, 
+
         getDOMStrings: () => {
             return DOMstrings; 
         }
@@ -42,7 +66,7 @@ var UIContoller = (() => {
  * GLOBAL APP CONTROLLER
  ********************/
 var contoller = ( (budgetCtrl, UICtrl) => {
-    //private
+    //PRIVATE
     var setupEventListeners = () => {
         var DOM = UICtrl.getDOMStrings();  
 
@@ -58,8 +82,7 @@ var contoller = ( (budgetCtrl, UICtrl) => {
 
     }
    
-
-    //public
+    //PUBLIC
     var ctrlAddItem = () => {
 
     //get the user input from the input field 
