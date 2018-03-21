@@ -55,10 +55,6 @@ var budgetController = (function()  {
             return newItem; 
         }, 
 
-        testing: function() {
-            console.log(data.allItems); 
-        }
-
     }; 
 
 })(); 
@@ -111,6 +107,22 @@ var UIContoller = (function() {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);   
         }, 
 
+        //clear the input fields  
+        clearFields: function() {
+            var fields, fieldsArr; 
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue); 
+
+            //copy fields node list into an array
+            fieldsArr = Array.prototype.slice.call(fields); 
+
+            fieldsArr.forEach(function(currentVal, index, array) {
+                currentVal.value = ''; 
+            });
+            
+            fieldsArr[0].focus(); 
+        },
+
+        //gets the DOM string object
         getDOMStrings: function() {
             return DOMstrings; 
         }
@@ -148,6 +160,9 @@ var contoller = (function(budgetCtrl, UICtrl) {
     newItem = budgetCtrl.addItem(input.type, input.description, input.value); 
     //add the item to the user interface
     UICtrl.addListItem(newItem, input.type); 
+
+    //clear the fields 
+    UIContoller.clearFields(); 
     //calculate the budget 
 
     // display the budget on the UI
