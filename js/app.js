@@ -55,6 +55,9 @@ var budgetController = (function()  {
             return newItem; 
         }, 
 
+        testing: function() {
+            console.log(data.allItems); 
+        }
     }; 
 
 })(); 
@@ -78,11 +81,11 @@ var UIContoller = (function() {
     //PUBLIC
     return {
 
-        getinput: function() {
+        getInput: function() {
             return {
             type: document.querySelector(DOMstrings.inputType).value, //will e either inc or exp
             description: document.querySelector(DOMstrings.inputDescription).value, 
-            value: document.querySelector(DOMstrings.inputValue).value 
+            value: parseFloat(document.querySelector(DOMstrings.inputValue).value) //convert string to number
             };    
         }, 
 
@@ -129,7 +132,6 @@ var UIContoller = (function() {
     }; 
 })(); 
 
-
 /********************
  * GLOBAL APP CONTROLLER
  ********************/
@@ -143,32 +145,45 @@ var contoller = (function(budgetCtrl, UICtrl) {
         //allows the user to click the enter key
         document.addEventListener('keypress', function(event) {
 
-        if(event.keyCode === 13 || event.which === 13) {
-            ctrlAddItem(); 
-        }
-    }); 
+            if(event.keyCode === 13 || event.which === 13) {
+                ctrlAddItem(); 
+            }
+        }); 
 
     }
-   
-    //PUBLIC
+    var updateBudget = function() {
+        //calculate the budget 
+
+        //return the budget 
+
+        // display the budget on the UI
+    }
+ 
     var ctrlAddItem = function() {
     var input, newItem; 
+
     //get the user input from the input field 
-    input = UICtrl.getinput();
+    input = UICtrl.getInput();
+    
+    if(input.description !== "" && !isNaN(input.value) && input.value > 0) {
+        
+        // add the item to the budget controller 
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-    // add the item to the budget controller 
-    newItem = budgetCtrl.addItem(input.type, input.description, input.value); 
-    //add the item to the user interface
-    UICtrl.addListItem(newItem, input.type); 
+        //add the item to the user interface
+        UICtrl.addListItem(newItem, input.type); 
 
-    //clear the fields 
-    UIContoller.clearFields(); 
-    //calculate the budget 
+        //clear the fields 
+        UIContoller.clearFields(); 
 
-    // display the budget on the UI
+        //calculate and upate budget 
+        updateBudget(); 
+    }
+   
 
     }
-
+    
+    //PUBLIC
     return {
         init: function() {
             console.log('application has started'); 
