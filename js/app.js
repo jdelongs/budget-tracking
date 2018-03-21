@@ -1,9 +1,9 @@
-//immediately invoked function expressions(IIFE) //added contructor and data structures
+//immediately invoked function expressions(IIFE) 
 /********************
  * BUDGET CONTROLLER
  ********************/
 var budgetController = (() => {
-
+    //PRIVATE
     //function contructors
     var Expense = function(id, description,value) {
         this.id = id; 
@@ -22,11 +22,44 @@ var budgetController = (() => {
             exp: [], 
             inc: []
         },
+
         totals: {
             exp: 0, 
             inc: 0
         }
     }
+    
+    //PUBLIC
+    return { 
+        addItem: function(type, desc, val) {
+            var newItem, ID; 
+
+            //create new iD
+            if (data.allItems[type].length > 0){
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+            } else {
+                ID = 0; 
+            }
+
+            //create new item based on input
+            if (type === 'exp') {
+                newItem = new Expense(ID, desc, val); 
+            } else if (type === 'inc') {
+                newItem = new Income(ID, desc, val); 
+            }
+
+            //push to data structure 
+            data.allItems[type].push(newItem); 
+
+            //return the new element
+            return newItem; 
+        }, 
+        
+        testing: function() {
+            console.log(data); 
+        }
+        
+    }; 
 
 })(); 
 
@@ -50,8 +83,8 @@ var UIContoller = (() => {
         getinput: () => {
             return {
             type: document.querySelector(DOMstrings.inputType).value, //will e either inc or exp
-            description: document.querySelector(DOMstrings.inputDescription).value, //will be a string
-            value: document.querySelector(DOMstrings.inputValue).value //will be a decimal number/int
+            description: document.querySelector(DOMstrings.inputDescription).value, 
+            value: document.querySelector(DOMstrings.inputValue).value 
             };    
         }, 
 
@@ -84,14 +117,14 @@ var contoller = ( (budgetCtrl, UICtrl) => {
    
     //PUBLIC
     var ctrlAddItem = () => {
-
+    var input, newItem; 
     //get the user input from the input field 
-    var input = UICtrl.getinput();
+    input = UICtrl.getinput();
 
     //make sure that the input is greater than 0 
     
     // add the item to the budget controller 
-
+    newItem = budgetController.addItem(input.type, input.description, input.value); 
     //add the item to the user interface
 
     //calculate the budget 
