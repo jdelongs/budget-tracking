@@ -113,7 +113,11 @@ var UIContoller = (function() {
         inputValue: '.add__value', 
         inputBtn: '.add__btn', 
         incomeContainer: '.income__list',
-        expensesContainer: '.expenses__list'   
+        expensesContainer: '.expenses__list', 
+        budgetLabel: '.budget__value', 
+        totalIncomeLabel: '.budget__income--value',
+        totalExpensesLabel: '.budget__expenses--value', 
+        totalPercentageLabel: '.budget__expenses--percentage'  
     }; 
     
     //PUBLIC
@@ -163,6 +167,18 @@ var UIContoller = (function() {
             fieldsArr[0].focus(); 
         },
 
+        displayBudget: function(obj){
+            document.querySelector(DOMstrings.budgetLabel).textContent = '$' + obj.budget;
+            document.querySelector(DOMstrings.totalIncomeLabel).textContent = '+ $' + obj.totalInc;
+            document.querySelector(DOMstrings.totalExpensesLabel).textContent = '- $' + obj.totalExp;
+            
+
+            if (obj.percentage > 0) {
+                document.querySelector(DOMstrings.totalPercentageLabel).textContent = obj.percentage + '%'; 
+            } else {
+                document.querySelector(DOMstrings.totalPercentageLabel).textContent = '---'; 
+            }
+        },
         //gets the DOM string object
         getDOMStrings: function() {
             return DOMstrings; 
@@ -176,7 +192,10 @@ var UIContoller = (function() {
 var contoller = (function(budgetCtrl, UICtrl) {
     //PRIVATE
     var setupEventListeners = function() {
-        var DOM = UICtrl.getDOMStrings();  
+        console.log('getDOMSTRINGS()');  
+        var DOM = UICtrl.getDOMStrings(); 
+        
+
 
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem); 
 
@@ -184,6 +203,7 @@ var contoller = (function(budgetCtrl, UICtrl) {
         document.addEventListener('keypress', function(event) {
 
             if(event.keyCode === 13 || event.which === 13) {
+                console.log('ctrlAddItem()'); 
                 ctrlAddItem(); 
             }
         }); 
@@ -192,34 +212,45 @@ var contoller = (function(budgetCtrl, UICtrl) {
 
     var updateBudget = function() {
         //calculate the budget 
+        console.log('calculateBudget'); 
         budgetCtrl.calculateBudget(); 
+        
 
         //return the budget 
+        console.log('getBudget()'); 
         var budget = budgetCtrl.getBudget(); 
 
         // display the budget on the UI
-        console.log(budget); 
+        UICtrl.displayBudget(budget); 
     }
  
     var ctrlAddItem = function() {
     var input, newItem; 
 
     //get the user input from the input field 
+    console.log('getInput()'); 
     input = UICtrl.getInput();
+ 
     
     if(input.description !== "" && !isNaN(input.value) && input.value > 0) {
 
         // add the item to the budget controller 
+        console.log('addItem()'); 
         newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+       
 
         //add the item to the user interface
+        console.log('addListItem()'); 
         UICtrl.addListItem(newItem, input.type); 
+    
 
         //clear the fields 
-        UIContoller.clearFields(); 
-
+        console.log('clearFields()');
+        UICtrl.clearFields();  
         //calculate and upate budget 
+        console.log('updateBudget()'); 
         updateBudget(); 
+      
     }
    
 
@@ -230,6 +261,10 @@ var contoller = (function(budgetCtrl, UICtrl) {
         init: function() {
             console.log('application has started'); 
             setupEventListeners(); 
+            UICtrl.displayBudget( { budget: 0, 
+                totalInc: 0, 
+                totalExp: 0, 
+                percentage: 0}); 
         }
     }; 
 
