@@ -25,6 +25,7 @@ var budgetController = (function()  {
     Expense.prototype.getPercentage = function() {
         return this.percentage; 
     }; 
+
     var Income = function(id, description, value){
         this.id = id; 
         this.description = description; 
@@ -174,7 +175,7 @@ var UIContoller = (function() {
         totalPercentageLabel: '.budget__expenses--percentage', 
         containerLabel: '.container',
         expensesPercentLabel: '.item__percentage',  
-        dateLabel: '.budget__title--month' 
+        dateLabel: '.budget__title--month',  
     }; 
     
     //PUBLIC
@@ -183,29 +184,40 @@ var UIContoller = (function() {
         //get the input from the user
         getInput: function() {
             return {
-            type: document.querySelector(DOMstrings.inputType).value, //will e either inc or exp
-            description: document.querySelector(DOMstrings.inputDescription).value, 
-            value: parseFloat(document.querySelector(DOMstrings.inputValue).value) //convert string to number
+                type: document.querySelector(DOMstrings.inputType).value, //will e either inc or exp
+                description: document.querySelector(DOMstrings.inputDescription).value, 
+                value: parseFloat(document.querySelector(DOMstrings.inputValue).value) //convert string to number
             };    
         }, 
 
         //adds html based based on if its inc or exp
         addListItem: function(obj, type) {
-            var html, newHtml, element;
+            var html, newHtml, element, date, month, day; 
+
+            date = new Date(); 
+
+        
+            months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; 
+            month = date.getMonth(); 
+            day = date.getDay(); 
+            getMonth = months[month];  
             //create html string with placeholder text 
             if(type === 'inc') {
                 element = DOMstrings.incomeContainer; 
 
-                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">+ $%value%</div><div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button> </div></div></div>'; 
+                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div><div class="item__date--added">%date%</div><div class="right clearfix"><div class="item__value">+ $%value%</div><div class="item__delete"> <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button> </div></div></div>'; 
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer; 
 
-                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"> <div class="item__value">- $%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'; 
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="item__date--added">%date%</div><div class="right clearfix"> <div class="item__value">- $%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'; 
             }
+
             //replace the placolder text with  actual data
             newHtml = html.replace('%id%', obj.id); 
             newHtml = newHtml.replace('%description%', obj.description);
-            newHtml = newHtml.replace('%value%', obj.value); 
+            newHtml = newHtml.replace('%date%',getMonth + ' '+ day + ', ' + date.getFullYear()); 
+            newHtml = newHtml.replace('%value%', obj.value);
+             
             //we insert the html into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);   
         },
@@ -221,7 +233,7 @@ var UIContoller = (function() {
             var now,month, months, year; 
             now = new Date(); 
 
-            months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; 
 
             month = now.getMonth(); 
             year = now.getFullYear();
@@ -276,6 +288,11 @@ var UIContoller = (function() {
                 }
             }); 
         }, 
+
+        changeColor: function(type) {
+            document.querySelector(DOM.inputType).addEventListener('onChange', typeChangeColor); 
+        }, 
+
         //gets the DOM string object
         getDOMStrings: function() {
             return DOMstrings; 
@@ -305,6 +322,7 @@ var contoller = (function(budgetCtrl, UICtrl) {
 
         document.querySelector(DOM.containerLabel).addEventListener('click', ctrlDeleteItem); 
 
+        
     }; 
 
     var updateBudget = function() {

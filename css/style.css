@@ -199,7 +199,7 @@ h2 {
     margin-bottom: 15px;
 }
 
-.icome__title { color: #28B9B5; }
+.income__title { color: #28B9B5; }
 .expenses__title { color: #FF5049; }
 
 .item {
@@ -212,6 +212,11 @@ h2 {
 
 .item__description {
     float: left;
+}
+
+.item__date--added {
+    float: left; 
+    margin-left: 38%; 
 }
 
 .item__value {
@@ -277,3 +282,23 @@ h2 {
 .unpaid .item__percentage { box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1); }
 .unpaid:hover .item__description { font-weight: 900; }
 
+.column__title {
+    font-weight: 700; 
+}
+
+.column__container {
+    display: flex;
+    justify-content: space-between;  
+}
+
+.column__desc {
+    text-align: left; 
+}
+
+.column__date--added {
+    text-align: center;
+}
+
+.column__val {
+    text-align: right; 
+}
